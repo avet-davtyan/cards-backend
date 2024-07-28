@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+    db:
+        container_name: cards_db_dev
+        image: postgres:16
+        volumes:
+            - cards_volume_dev:/var/lib/postgresql/data
+        ports:
+            - "${POSTGRES_PORT}:${POSTGRES_PORT}"
+        env_file:
+            - .env
+
+    backend:
+        container_name: cards_backend
+        build:
+            context: .
+            dockerfile: dockerFiles/Dockerfile.backend
+        volumes:
+            - ./backend:/app/backend
+        ports:
+            - "${BACKEND_DEV_PORT}:3000"
+            - "5555:5555"
+        env_file:
+            - .env
+
+    frontend:
+        container_name: cards_frontend
+        build:
+            context: .
+            dockerfile: dockerFiles/Dockerfile.frontend
+        volumes:
+            - ./frontend:/app/frontend
+        ports:
+            - "${FRONTEND_DEV_PORT}:5173"
+        env_file:
+            - .env
+
+volumes:
+    cards_volume_dev:

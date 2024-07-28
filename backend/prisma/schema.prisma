@@ -1,0 +1,60 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:admin@db:5432/cards"
+}
+
+model CrudUser {
+  id       String @id @default(uuid())
+  username String
+  password String
+}
+
+model User {
+  id      String       @id
+  balance Balance?
+  cards   UsersCards[]
+}
+
+model Card {
+  id         String       @id @default(uuid())
+  name       String
+  author     String
+  image      Bytes
+  price      Int
+  cardTypeId Int
+  cardType   CardType     @relation(fields: [cardTypeId], references: [id])
+  users      UsersCards[]
+}
+
+model Balance {
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @id @map("user_id")
+  balance Int
+}
+
+model UsersCards {
+  userId String
+  cardId String
+
+  user User @relation(fields: [userId], references: [id])
+  card Card @relation(fields: [cardId], references: [id])
+
+  @@id([userId, cardId])
+}
+
+model CardType {
+  id              Int    @id @default(autoincrement())
+  typeDescription String
+  stars           Int
+  cards           Card[]
+}
