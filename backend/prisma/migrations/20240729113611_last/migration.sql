@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Card" ADD COLUMN     "pending" BOOLEAN NOT NULL DEFAULT true,
+ALTER COLUMN "image" DROP NOT NULL;

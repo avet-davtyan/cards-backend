@@ -29,7 +29,8 @@ model Card {
   id         String       @id @default(uuid())
   name       String
   author     String
-  image      Bytes
+  image      String?
+  pending    Boolean      @default(true)
   price      Int
   cardTypeId Int
   cardType   CardType     @relation(fields: [cardTypeId], references: [id])
